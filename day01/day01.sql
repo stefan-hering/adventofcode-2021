@@ -4,7 +4,7 @@ select count(diff) from (select depths - lag(depths, 1) over () as diff from day
 -- part 2
 select count(diff)
 from (
-         select sum(depths) over (ROWS 2 PRECEDING)  -
+         select sum(depths) over (rows 2 preceding)  -
                 (lag(depths, 1) over() +
                  lag(depths, 2) over() +
                  lag(depths, 3) over()) as diff
