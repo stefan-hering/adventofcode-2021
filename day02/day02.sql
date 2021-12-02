@@ -1,6 +1,3 @@
-select *
-from day02;
-
 create or replace view movements as
 select case
            when direction = 'forward' then value
