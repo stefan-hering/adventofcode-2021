@@ -1,8 +1,3 @@
-create table if not exists day01
-(
-    depths int
-);
-
 truncate table day01;
 
 insert into day01

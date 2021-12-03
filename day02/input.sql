@@ -1,9 +1,3 @@
-create table if not exists day02
-(
-    direction text,
-    value     int
-);
-
 truncate table day02;
 
 insert into day02 values
