@@ -48,13 +48,13 @@ with recursive indexedDay3 as (select number, row_number() over () as id from da
                    select indexedDay3.*, depth + 1
                    from indexedDay3
                             join oxygen on indexedDay3.id = oxygen.id
-                   where substr(oxygen.number, depth, 1) = (select bit
-                                                            from (select substr(number, depth, 1)::char as bit
-                                                                  from oxygen o2
-                                                                  where o2.depth = oxygen.depth) bits
-                                                            group by 1
-                                                            order by count(*) desc, bit desc fetch first row only)
-                     and depth <= (select length(number) from day03 fetch first row only)
+                       and substr(oxygen.number, depth, 1) = (select bit
+                                                              from (select substr(number, depth, 1)::char as bit
+                                                                    from oxygen o2
+                                                                    where o2.depth = oxygen.depth) bits
+                                                              group by 1
+                                                              order by count(*) desc, bit desc fetch first row only)
+                       and depth <= (select length(number) from day03 fetch first row only)
                )
 select number
 from oxygen
