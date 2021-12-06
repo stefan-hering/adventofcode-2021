@@ -1,1 +1,1 @@
-truncate table day05;
+truncate table day07;
