@@ -3,6 +3,12 @@ create or replace function countFishies(days int)
 as
 $$
 begin
+    drop table if exists indexed_lanternfish;
+    create table indexed_lanternfish as (
+        select count(age)::bigint as fishies, age
+        from day06
+        group by age
+    );
     for i in 1..days
         loop
             update indexed_lanternfish set age = (age - 1);
@@ -24,21 +30,9 @@ $$
     language plpgsql;
 
 -- part 1
-drop table if exists indexed_lanternfish;
-create table indexed_lanternfish as (
-    select count(age)::bigint as fishies, age
-    from day06
-    group by age
-);
 select countFishies(80);
 
 -- part 2
-drop table if exists indexed_lanternfish;
-create table indexed_lanternfish as (
-    select count(age)::bigint as fishies, age
-    from day06
-    group by age
-);
 select countFishies(256);
 
 
