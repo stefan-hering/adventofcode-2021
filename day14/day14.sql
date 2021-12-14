@@ -1,4 +1,4 @@
--- part 1 with brute force approach
+-- part 1, brute force approach just building the actual string
 drop table polymer;
 create table polymer
 (
@@ -43,7 +43,7 @@ with counts as (select count(char) c from polymer group by char)
 select max(c) - min(c)
 from counts;
 
--- part 2 with a smart approach
+-- part 2 with a smart approach of counting pairs
 drop table if exists paircounts;
 create table paircounts
 (
@@ -54,7 +54,7 @@ create table paircounts
 create unique index on paircounts (char1, char2);
 
 truncate table paircounts;
--- add 💩 to mark the beginning pair, or else the final sum will be off
+-- add placeholder 💩 to add the first and last pair, or else the final sum will be off
 -- first pair
 with split (char) as (select regexp_split_to_table((select line from day14 limit 1), ''))
 insert
