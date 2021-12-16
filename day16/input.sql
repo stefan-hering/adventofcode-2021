@@ -1,1 +1,0 @@
-truncate table day16;
