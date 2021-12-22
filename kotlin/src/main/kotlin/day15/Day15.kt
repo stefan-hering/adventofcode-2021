@@ -5,7 +5,7 @@ import kotlin.system.measureTimeMillis
 
 typealias Grid = List<List<Int>>
 
-fun readInput() = Unit.javaClass.getResource("/input")
+fun readInput() = Unit.javaClass.getResource("/day15/input")
     .readText()
     .lines()
     .filter { it.isNotEmpty() }
