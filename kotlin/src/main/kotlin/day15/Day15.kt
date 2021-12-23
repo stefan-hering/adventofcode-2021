@@ -43,17 +43,21 @@ fun findMinimumRisk(grid: Grid) {
 
         minRisks.setIfLower(i, j, nextRisk)
 
-        val backTracked = if (i > 0 &&
+        if (i > 0 &&
             minRisks.setIfLower(i - 1, j, minRisks[i][j] + grid[i - 1][j])
         ) {
-            true
-        } else j > 0 &&
+            i--
+            iteration--
+        }
+        if (j > 0 &&
             minRisks.setIfLower(i, j - 1, minRisks[i][j] + grid[i][j - 1])
+        ) {
+            j--
+            iteration--
+        }
 
         val maxValue = min(iteration, grid.size - 1)
-        if (backTracked) {
-            iteration--
-        } else if (i < maxValue && j > 0) {
+        if (i < maxValue && j > 0) {
             i++
             j--
         } else {
