@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:0fad6c228a"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
@@ -8,15 +17,58 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.10'
+    implementation 'com.strumenta.antlr-kotlin:antlr-kotlin-runtime:0fad6c228a'
+    implementation 'com.strumenta.antlr-kotlin:antlr-kotlin-runtime-jvm:0fad6c228a'
+    implementation 'com.strumenta.antlr-kotlin:antlr-kotlin-gradle-plugin:0fad6c228a'
 }
 
-test {
-    useJUnitPlatform()
+// in antlr-kotlin-plugin <0.0.5, the configuration was applied by the plugin.
+// starting from verison 0.0.5, you have to apply it manually:
+tasks.register("generateKotlinGrammarSource", com.strumenta.antlrkotlin.gradleplugin.AntlrKotlinTask) {
+
+    // the classpath used to run antlr code generation
+    antlrClasspath = configurations.detachedConfiguration(
+            // antlr itself
+            // antlr is transitive added by antlr-kotlin-target,
+            // add another dependency if you want to choose another antlr4 version (not recommended)
+            // project.dependencies.create("org.antlr:antlr4:$antlrVersion"),
+
+            // antlr target, required to create kotlin code
+            project.dependencies.create("com.strumenta.antlr-kotlin:antlr-kotlin-target:0fad6c228a")
+    )
+    maxHeapSize = "64m"
+    packageName = "day24"
+    arguments =[ "-no-visitor", "-no-listener"]
+    source = project.objects
+            .sourceDirectorySet("antlr", "antlr")
+            .srcDir("src/main/kotlin/day24")
+
+    include "*.g4"
+
+    // outputDirectory is required, put it into the build directory
+    // if you do not want to add the generated sources to version control
+    //outputDirectory = File("build/generated-src/antlr/main")
+    // use this settings if you want to add the generated sources to version control
+    outputDirectory = new File("src/main/kotlin-antlr")
 }
+
+tasks.getByName("compileKotlin").dependsOn("generateKotlinGrammarSource")
+
+sourceSets {
+    main {
+        kotlin {
+            srcDirs "src/main/kotlin"
+            srcDirs "src/main/kotlin-antlr"
+        }
+    }
+}
+
 compileKotlin {
     kotlinOptions {
         jvmTarget = "11"
